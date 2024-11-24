@@ -1,0 +1,26 @@
+name: PointCylinder
+version: '0.0.1'
+main: dev.twme.pointCylinder.PointCylinder
+api-version: '1.13'
+authors: [ TWME ]
+depend:
+  - FastAsyncWorldEdit
+description: A plugin that allows you to create a cylinder from three points
+commands:
+  /pcyl:
+    description: Create a cylinder from three points
+    usage: /<command> <block_type> [height] [-d]
+    permission: worldedit.generation.pointcylinder
+    permission-message: You do not have permission to use this command
+  /phcyl:
+    description: Create a hollow cylinder from three points
+    usage: /<command> <block_type> [height] [thickness] [-d]
+    permission: worldedit.generation.pointhollowcylinder
+    permission-message: You do not have permission to use this command
+permissions:
+    worldedit.generation.pointcylinder:
+        description: Allows the player to create a cylinder from three points
+        default: op
+    worldedit.generation.pointhollowcylinder:
+        description: Allows the player to create a hollow cylinder from three points
+        default: op
