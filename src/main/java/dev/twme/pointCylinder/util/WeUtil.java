@@ -1,16 +1,46 @@
 package dev.twme.pointCylinder.util;
 
+import com.fastasyncworldedit.core.math.MutableVector3;
 import com.fastasyncworldedit.core.util.TaskManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extension.factory.PatternFactory;
+import com.sk89q.worldedit.extension.input.ParserContext;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.world.block.BaseBlock;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class WeUtil {
+
+    public static final Vector3 offset = new MutableVector3(0.5, 0.5, 0.5);
+
+    public static List<String> getPatternSuggestions(String blockTypeString, Player player) {
+        ParserContext context = new ParserContext();
+        context.setActor(BukkitAdapter.adapt(player));
+        context.setWorld(BukkitAdapter.adapt(player.getWorld()));
+        PatternFactory patternFactory = WorldEdit.getInstance().getPatternFactory();
+        return patternFactory.getSuggestions(blockTypeString, context);
+    }
+
+    public static Pattern getPattern(String blockTypeString, Player player) {
+        Pattern blockPattern;
+        try {
+            ParserContext context = new ParserContext();
+            context.setActor(BukkitAdapter.adapt(player));
+            context.setWorld(BukkitAdapter.adapt(player.getWorld()));
+            PatternFactory patternFactory = WorldEdit.getInstance().getPatternFactory();
+            blockPattern = patternFactory.parseFromInput(blockTypeString, context);
+        } catch (Exception e) {
+            return null;
+        }
+        return blockPattern;
+    }
 
     public static void generateCircleCylinder(Player player, LocalSession session, Vector3 v1, Vector3 v2, Vector3 v3, Pattern blockPattern, float height, boolean filled, int thickness) {
 

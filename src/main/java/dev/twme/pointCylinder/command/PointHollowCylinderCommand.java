@@ -44,14 +44,9 @@ public class PointHollowCylinderCommand implements CommandExecutor {
 
         String blockTypeString = args[0];
 
-        Pattern blockPattern;
-        try {
-            ParserContext context = new ParserContext();
-            context.setActor(actor);
-            context.setWorld(BukkitAdapter.adapt(player.getWorld()));
-            PatternFactory patternFactory = WorldEdit.getInstance().getPatternFactory();
-            blockPattern = patternFactory.parseFromInput(blockTypeString, context);
-        } catch (Exception e) {
+        Pattern blockPattern = WeUtil.getPattern(blockTypeString, player);
+
+        if (blockPattern == null) {
             player.sendMessage("Invalid block type: " + blockTypeString);
             return true;
         }
@@ -120,9 +115,9 @@ public class PointHollowCylinderCommand implements CommandExecutor {
             }
 
             // 獲取最後三個點
-            Vector3 v1 = points.get(points.size() - 3).toVector3();
-            Vector3 v2 = points.get(points.size() - 2).toVector3();
-            Vector3 v3 = points.get(points.size() - 1).toVector3();
+            Vector3 v1 = points.get(points.size() - 3).toVector3().add(WeUtil.offset);
+            Vector3 v2 = points.get(points.size() - 2).toVector3().add(WeUtil.offset);
+            Vector3 v3 = points.get(points.size() - 1).toVector3().add(WeUtil.offset);
 
             if (down) {
                 double minY = Math.min(v1.y(), Math.min(v2.y(), v3.y()));
