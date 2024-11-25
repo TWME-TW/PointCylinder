@@ -4,9 +4,6 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.extension.factory.PatternFactory;
-import com.sk89q.worldedit.extension.input.ParserContext;
-import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
@@ -39,7 +36,6 @@ public class PointHollowCylinderCommand implements CommandExecutor {
             return false;
         }
 
-        Actor actor = BukkitAdapter.adapt(player);
         BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
 
         String blockTypeString = args[0];
@@ -101,7 +97,7 @@ public class PointHollowCylinderCommand implements CommandExecutor {
         }
 
         // 獲取玩家的選取區域
-        LocalSession session = WorldEdit.getInstance().getSessionManager().get(actor);
+        LocalSession session = WorldEdit.getInstance().getSessionManager().get(bukkitPlayer);
         RegionSelector selector = session.getRegionSelector(bukkitPlayer.getWorld());
 
 

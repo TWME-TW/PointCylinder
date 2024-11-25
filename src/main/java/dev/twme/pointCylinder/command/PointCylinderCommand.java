@@ -4,9 +4,6 @@ import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.extension.factory.PatternFactory;
-import com.sk89q.worldedit.extension.input.ParserContext;
-import com.sk89q.worldedit.extension.platform.Actor;
 import com.sk89q.worldedit.function.pattern.Pattern;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.Vector3;
@@ -38,8 +35,6 @@ public class PointCylinderCommand implements CommandExecutor {
         if (args.length < 1) {
             return false;
         }
-
-        BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
 
         String blockTypeString = args[0];
 
@@ -86,9 +81,11 @@ public class PointCylinderCommand implements CommandExecutor {
             return true;
         }
 
+        BukkitPlayer bukkitPlayer = BukkitAdapter.adapt(player);
+
         // 獲取玩家的選取區域
-        LocalSession session = WorldEdit.getInstance().getSessionManager().get(BukkitAdapter.adapt(player));
-        RegionSelector selector = session.getRegionSelector(BukkitAdapter.adapt(player).getWorld());
+        LocalSession session = WorldEdit.getInstance().getSessionManager().get(bukkitPlayer);
+        RegionSelector selector = session.getRegionSelector(bukkitPlayer.getWorld());
 
         if (selector instanceof ConvexPolyhedralRegionSelector) {
             ConvexPolyhedralRegionSelector cps = (ConvexPolyhedralRegionSelector) selector;

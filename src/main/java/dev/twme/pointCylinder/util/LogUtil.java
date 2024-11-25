@@ -1,7 +1,7 @@
 package dev.twme.pointCylinder.util;
 
-import org.bukkit.entity.Player;
 import dev.twme.pointCylinder.PointCylinder;
+import org.bukkit.entity.Player;
 
 public class LogUtil {
 

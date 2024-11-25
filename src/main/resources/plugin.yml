@@ -1,11 +1,12 @@
 name: PointCylinder
-version: '0.0.2'
+version: '${project.version}'
 main: dev.twme.pointCylinder.PointCylinder
 api-version: '1.13'
 authors: [ TWME ]
 depend:
   - FastAsyncWorldEdit
 description: A plugin that allows you to create a cylinder from three points
+website: https://github.com/TWME-TW/PointCylinder
 commands:
   /pcyl:
     description: Create a cylinder from three points
