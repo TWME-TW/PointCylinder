@@ -5,18 +5,18 @@ import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.bukkit.BukkitPlayer;
 import com.sk89q.worldedit.function.pattern.Pattern;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.regions.selector.ConvexPolyhedralRegionSelector;
+import dev.twme.pointCylinder.exception.LessThenThreePointsException;
+import dev.twme.pointCylinder.exception.NonConvexPolyhedralRegionException;
+import dev.twme.pointCylinder.exception.ThreePointsCollinearException;
+import dev.twme.pointCylinder.util.PlayerCylinderData;
 import dev.twme.pointCylinder.util.WeUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class PointHollowCylinderCommand implements CommandExecutor {
     @Override
@@ -96,39 +96,23 @@ public class PointHollowCylinderCommand implements CommandExecutor {
             return true;
         }
 
-        // 獲取玩家的選取區域
-        LocalSession session = WorldEdit.getInstance().getSessionManager().get(bukkitPlayer);
-        RegionSelector selector = session.getRegionSelector(bukkitPlayer.getWorld());
+        PlayerCylinderData playerCylinderData;
 
-
-        if (selector instanceof ConvexPolyhedralRegionSelector) {
-            ConvexPolyhedralRegionSelector cps = (ConvexPolyhedralRegionSelector) selector;
-            List<BlockVector3> points = cps.getVertices();
-
-            if (points.size() < 3) {
-                player.sendMessage("Please select at least 3 points.");
-                return true;
-            }
-
-            // 獲取最後三個點
-            Vector3 v1 = points.get(points.size() - 3).toVector3().add(WeUtil.offset);
-            Vector3 v2 = points.get(points.size() - 2).toVector3().add(WeUtil.offset);
-            Vector3 v3 = points.get(points.size() - 1).toVector3().add(WeUtil.offset);
-
-            if (down) {
-                double minY = Math.min(v1.y(), Math.min(v2.y(), v3.y()));
-                v1 = v1.setComponents(v1.x(), minY, v1.z());
-                v2 = v2.setComponents(v2.x(), minY, v2.z());
-                v3 = v3.setComponents(v3.x(), minY, v3.z());
-            }
-
-            // 生成圓柱
-            WeUtil.generateCircleCylinder(player, session, v1, v2, v3, blockPattern, height, false, thickness);
-
-        } else {
-            player.sendMessage("Please use convex selection mode.");
+        try {
+            playerCylinderData = PlayerCylinderData.generate(player, blockPattern, down);
+        } catch (NonConvexPolyhedralRegionException e) {
+            player.sendMessage("Please select a convex region.");
+            return true;
+        } catch (LessThenThreePointsException e) {
+            player.sendMessage("Please select at least three points.");
+            return true;
+        } catch (ThreePointsCollinearException e) {
+            player.sendMessage("The selected points are collinear.");
             return true;
         }
+
+        // 生成圓柱
+        WeUtil.generateHollowCylinder(bukkitPlayer, playerCylinderData, height, thickness);
 
         return true;
     }

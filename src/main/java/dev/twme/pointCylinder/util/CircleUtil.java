@@ -5,6 +5,10 @@ import com.sk89q.worldedit.math.Vector3;
 
 public class CircleUtil {
 
+    public static Vector3 calculateNormal(Vector3 v1, Vector3 v2, Vector3 v3) {
+        return (v2.subtract(v1)).cross(v3.subtract(v1)).normalize();
+    }
+
     public static Vector3 calculateCircleCenter(Vector3 A, Vector3 B, Vector3 C) {
         // 計算空間中三個點的圓的圓心
         Vector3 AB = B.subtract(A);
